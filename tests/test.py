@@ -1,9 +1,11 @@
 import random
 import unittest
 
+from Cython import bint
 from pydantic import BaseModel
 
 from tenforce.enforcer import check
+from tenforce.exceptions import TypeEnforcementError
 
 
 class TestClass:
@@ -46,7 +48,18 @@ class TestValidator(unittest.TestCase):
             )
 
     def test_fail(self):
+        try:
+            test_class = TestClass()
+            test_class.sku = 'AAAA'
+            check(test_class)
+        except TypeEnforcementError:
+            print("Caught TypeEnforcementError, pass")
+
+    def test_autocast(self):
         test_class = TestClass()
-        test_class.sku = 'AAAA'
-        check(test_class)
+        test_class.sku = "12345"
+        test_class.mfg_part_number = "ABC"
+        test_class.description = "Test Description"
+        test_class.image_urls = []
+        check(test_class, auto_cast=bint(True))
 

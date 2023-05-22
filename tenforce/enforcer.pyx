@@ -21,6 +21,7 @@ cdef class ParsedMember:
         :raises TypeEnforcementError: if there is a mismatched type
         :return: None
         """
+        #print(f"{self.class_name}.{self.member_name}: {self.annotated_type} | {self.actual_type} = {self.obj}")
         if self.actual_type is not self.annotated_type:
             raise TypeEnforcementError(
                 class_name=self.class_name,
@@ -30,11 +31,11 @@ cdef class ParsedMember:
             )
 
 
-
-cpdef check(object obj):
+cpdef check(object obj, bint auto_cast = False):
     """
     Checks the class variables of an object & enforces its type hints
     :param obj: Instance of a class
+    :param auto_cast: Optional, automatically cast things like 
     :return: None
     """
 
@@ -45,7 +46,7 @@ cpdef check(object obj):
 
     # create the ParsedMember instance and a list to hold them
     cdef list parsed_members = []
-    cdef ParsedMember parsed_member = ParsedMember()
+    cdef ParsedMember parsed_member
 
     # iterate over the annotations and create ParsedMember objects
     cdef str x
@@ -54,7 +55,17 @@ cpdef check(object obj):
         if type(annotations[x]) is GenericAlias:
             continue
 
+        # if auto cast is true, auto cast the value
+        if auto_cast is True:
+            # if the value provided is numeric, try and cast it to an int
+            if type(values.get(x)) is str and values.get(x).isnumeric():
+                values[x] = int(values[x])
+            # if the value provided is an int and the annotation requires a float, try and cast it to a float
+            elif type(values.get(x)) is int and annotations[x] == float:
+                values[x] = float(values[x])
+
         # create a ParsedMember
+        parsed_member = ParsedMember()
         parsed_member.annotated_type = annotations[x]
         parsed_member.actual_type = type(values.get(x))
         parsed_member.obj = values.get(x)
