@@ -27,11 +27,12 @@ cdef class ParsedMember:
                 class_name=self.class_name,
                 var_name=self.member_name,
                 requested_type=self.annotated_type,
-                actual_type=self.actual_type
+                actual_type=self.actual_type,
+                obj=self.obj
             )
 
 
-cpdef check(object obj, bint auto_cast = False):
+cpdef check(object obj: object, bint auto_cast: bool = False):
     """
     Checks the class variables of an object & enforces its type hints
     :param obj: Instance of a class
@@ -57,11 +58,12 @@ cpdef check(object obj, bint auto_cast = False):
 
         # if auto cast is true, auto cast the value
         if auto_cast is True:
-            # if the value provided is numeric, try and cast it to an int
-            if type(values.get(x)) is str and values.get(x).isnumeric():
+            # if the value provided is a numeric string, try and cast it to an int
+            if type(values.get(x)) is str and annotations[x] is int and values.get(x).isnumeric():
                 values[x] = int(values[x])
+
             # if the value provided is an int and the annotation requires a float, try and cast it to a float
-            elif type(values.get(x)) is int and annotations[x] == float:
+            if type(values.get(x)) is int and annotations[x] is float:
                 values[x] = float(values[x])
 
         # create a ParsedMember

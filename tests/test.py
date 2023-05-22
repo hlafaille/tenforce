@@ -61,5 +61,5 @@ class TestValidator(unittest.TestCase):
         test_class.mfg_part_number = "ABC"
         test_class.description = "Test Description"
         test_class.image_urls = []
-        check(test_class, auto_cast=bint(True))
+        check(test_class, auto_cast=True)
 
