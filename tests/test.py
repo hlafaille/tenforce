@@ -3,7 +3,7 @@ import unittest
 
 from pydantic import BaseModel
 
-from tenforce.validator import check
+from tenforce.enforcer import check
 
 
 class TestClass:
@@ -17,37 +17,18 @@ class TestClassPd(BaseModel):
     sku: int
     mfg_part_number: str
     description: str
+    image_urls: list[str]
 
 
 class TestValidator(unittest.TestCase):
-    '''def test_fail(self):
-        """
-        Tests a failure
-        """
-        test_class = TestClass()
-        test_class.sku = "a"
-        test_class.mfg_part_number = 1
-        check(test_class)'''
-
-    def test_single_pass(self):
-        """
-        Tests a singular pass
-        """
-        test_class = TestClass()
-        test_class.sku = 1
-        test_class.mfg_part_number = "A"
-        test_class.description = "B"
-        test_class.image_urls = []
-        check(test_class)
-
-    '''def test_one_billion_tenforce(self):
+    def test_one_billion_tenforce(self):
         """
         Tests 1 Billion successful validations on TestClass using Tenforce
         """
         for x in range(0, 9_999_999):
             test_class = TestClass()
-            test_class.sku = random.randrange(111111, 999999999)
-            test_class.mfg_part_number = str(random.randrange(69420, 999999999999999))
+            test_class.sku = 12345
+            test_class.mfg_part_number = "ABC"
             test_class.description = "Test Description"
             test_class.image_urls = []
             check(test_class)
@@ -58,9 +39,14 @@ class TestValidator(unittest.TestCase):
         """
         for x in range(0, 9_999_999):
             test_class = TestClassPd(
-                sku=random.randrange(111111, 999999999),
-                mfg_part_number=str(random.randrange(69420, 999999999999999)),
-                description="Test Description"
-            )'''
+                sku=12345,
+                mfg_part_number="ABC",
+                description="Test Description",
+                image_urls=[]
+            )
 
+    def test_fail(self):
+        test_class = TestClass()
+        test_class.sku = 'AAAA'
+        check(test_class)
 

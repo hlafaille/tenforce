@@ -3,5 +3,5 @@ from Cython.Build import cythonize
 
 setup(
     name='Tenforce',
-    ext_modules=cythonize(["tenforce/parser.pyx", "tenforce/enforcer.pyx"])
+    ext_modules=cythonize(["tenforce/enforcer.pyx"])
 )

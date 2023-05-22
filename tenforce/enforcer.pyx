@@ -1,4 +1,4 @@
-import typing
+#cython: language_level=3
 from types import GenericAlias
 
 from tenforce.exceptions import TypeEnforcementError
@@ -7,31 +7,28 @@ cdef class UninitializedMember:
     """A container class to differentiate class variables populated with None intentionally and those who are uninitialized"""
     pass
 
-cdef class TypedList:
-    """Represents a GenericAlias list"""
-    cdef type requested_type
-    cdef list obj
 
-    cdef enforce(self):
-        """
-        Enforces the requested_type on all members of obj
-        :raise TypeEnforcementError: if the requested_type does not match at least one member of obj
-        :return: 
-        """
-
-# EnforceableObject contains
-cdef class EnforceableObject:
-    cdef type requested_type
+cdef class ParsedMember:
+    cdef type annotated_type
+    cdef type actual_type
     cdef object obj
+    cdef str member_name
 
-    cdef enforce(self):
+    cpdef enforce(self):
         """
-        Enforces the requested_type on obj
-        :raises TypeEnforcementError: if the requested_type does not match actual_type
-        :return: 
+        Enforces the type for this ParsedMember
+        :raises TypeEnforcementError: if there is a mismatched type
+        :return: None
         """
-        if type(self.obj) is not self.requested_type:
-            raise TypeEnforcementError()
+        if self.actual_type is not self.annotated_type:
+            raise TypeEnforcementError(
+                class_name=self.obj.__name__,
+                var_name=self.member_name,
+                requested_type=self.annotated_type,
+                actual_type=self.actual_type
+            )
+
+
 
 cpdef check(object obj):
     """
@@ -39,19 +36,31 @@ cpdef check(object obj):
     :param obj: Instance of a class
     :return: None
     """
-    # get the annotations of the object
-    cdef dict annotations = typing.get_type_hints(obj)
-    cdef dict class_values = obj.__dict__
-    cdef list enforceable_objects = []
+    # define the annotations and values
+    cdef str class_name = obj.__class__.__name__
+    cdef dict annotations = obj.__annotations__
+    cdef dict values = obj.__dict__
 
-    # iterate over the annotations, generate a list of EnforceableObject(s)
-    cdef str var
-    for var in annotations.keys():
-        if type(annotations[var]) is GenericAlias:
+    # create the ParsedMember instance and a list to hold them
+    cdef list parsed_members = []
+    cdef ParsedMember parsed_member = ParsedMember()
+
+    # iterate over the annotations and create ParsedMember objects
+    cdef str x
+    for x in annotations.keys():
+        # todo add support for list typing
+        if type(annotations[x]) is GenericAlias:
             continue
-        enforceable_object = EnforceableObject()
-        enforceable_object.requested_type = annotations[var]
-        enforceable_object.obj = class_values.get(annotations[var], UninitializedMember)
-        enforceable_objects.append(enforceable_object)
 
+        # create a ParsedMember
+        parsed_member.annotated_type = annotations[x]
+        parsed_member.actual_type = type(values.get(x, UninitializedMember))
+        print(parsed_member.actual_type)
+        parsed_member.obj = values.get(x, UninitializedMember)
+        parsed_member.member_name = x
+        parsed_members.append(parsed_member)
 
+    # iterate over the parsed members, validate their types
+    cdef int y
+    for y in range(len(parsed_members)):
+        parsed_members[y].enforce()
