@@ -6,4 +6,4 @@ class TypeEnforcementError(Exception):
         self.actual_type = actual_type
 
     def __str__(self):
-        return f"'{self.class_name}.{self.var_name}' is type '{self.actual_type}', needs type '{self.requested_type.__name__}'"
+        return f"'{self.class_name}.{self.var_name}' is type '{self.actual_type.__name__}', needs type '{self.requested_type.__name__}'"

@@ -13,6 +13,7 @@ cdef class ParsedMember:
     cdef type actual_type
     cdef object obj
     cdef str member_name
+    cdef str class_name
 
     cpdef enforce(self):
         """
@@ -22,7 +23,7 @@ cdef class ParsedMember:
         """
         if self.actual_type is not self.annotated_type:
             raise TypeEnforcementError(
-                class_name=self.obj.__name__,
+                class_name=self.class_name,
                 var_name=self.member_name,
                 requested_type=self.annotated_type,
                 actual_type=self.actual_type
@@ -54,10 +55,10 @@ cpdef check(object obj):
 
         # create a ParsedMember
         parsed_member.annotated_type = annotations[x]
-        parsed_member.actual_type = type(values.get(x, UninitializedMember))
-        print(parsed_member.actual_type)
-        parsed_member.obj = values.get(x, UninitializedMember)
+        parsed_member.actual_type = type(values.get(x, UninitializedMember()))
+        parsed_member.obj = values.get(x, UninitializedMember())
         parsed_member.member_name = x
+        parsed_member.class_name = class_name
         parsed_members.append(parsed_member)
 
     # iterate over the parsed members, validate their types
