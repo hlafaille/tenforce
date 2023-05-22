@@ -37,6 +37,7 @@ cpdef check(object obj):
     :param obj: Instance of a class
     :return: None
     """
+
     # define the annotations and values
     cdef str class_name = obj.__class__.__name__
     cdef dict annotations = obj.__annotations__
@@ -55,8 +56,8 @@ cpdef check(object obj):
 
         # create a ParsedMember
         parsed_member.annotated_type = annotations[x]
-        parsed_member.actual_type = type(values.get(x, UninitializedMember()))
-        parsed_member.obj = values.get(x, UninitializedMember())
+        parsed_member.actual_type = type(values.get(x))
+        parsed_member.obj = values.get(x)
         parsed_member.member_name = x
         parsed_member.class_name = class_name
         parsed_members.append(parsed_member)
