@@ -6,7 +6,8 @@
 
 I developed this package because I had issues with Pydantic and handling large amounts of base models. I eventually
 plan to add serialization/deserialization to this. For example, populating **one billion** `BaseModel` objects in
-Pydantic takes roughly 30-35 seconds on my M1 Mac, versus 3-5 seconds with Tenforce.
+Pydantic takes roughly 30-35 seconds on my M1 Mac, versus 3-5 seconds with Tenforce. Pydantic is supposed to get a 
+rewrite in rust with V2 though, so let's see how that turns out :)
 
 # Principles
 
