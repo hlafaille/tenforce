@@ -1,8 +1,11 @@
 from tenforce.enforcer import check
 
 
-class TestClas:
+class TestClass:
     a: int
     b: int
 
-check(TestClas())
+test_class = TestClass()
+test_class.a = 1
+test_class.b = 2
+check(test_class)

@@ -1,4 +1,7 @@
-build:
+build_inplace:
+	python3 setup.py build_ext --inplace
+
+build_dist:
 	python3 -m build
 
 clean:

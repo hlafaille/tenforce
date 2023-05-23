@@ -1,7 +1,4 @@
-import random
 import unittest
-
-from Cython import bint
 from pydantic import BaseModel
 
 from tenforce.enforcer import check
