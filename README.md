@@ -19,3 +19,7 @@ mainly in Cython, it follows a few design principles.
 2. Opt-in helpers, not opt-out
     * By default, we try to run was little code as possible when calling `check()` on an object. We do have extra arguments
       like `auto_cast` to automatically cast variables (assuming it can be a successful cast)
+3. Support only the most popular patterns for API development
+   * In my experience doing backend in a dynamic language such as Python, it is often you don't find yourself ever needing 
+      a list able to contain multiple types (ex: `list[str | int]`)
+   * Building in lots of features will inevitably add slowdowns to `check()`
