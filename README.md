@@ -3,6 +3,7 @@
 **T**ype **enforce**ment for Python.
 
 # Installation
+`pip install tenforce`
 
 # Reason for development
 
