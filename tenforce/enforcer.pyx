@@ -134,7 +134,6 @@ cpdef ParsedMember _parse_member(str class_name, str member_name, type annotatio
     parsed_member.class_name = class_name
 
     # run the enforce now, we want to not bother enforcing more if we have a validation error
-
     parsed_member.enforce()
     return parsed_member
 
@@ -143,7 +142,7 @@ cpdef check(object obj, bint auto_cast = False):
     """
     Checks the class variables of an object & enforces its type hints
     :param obj: Instance of a class
-    :param auto_cast: Optional, automatically cast things like 
+    :param auto_cast: Optional, automatically cast things like numeric strings to ints (if the annotation allows)
     :return: None
     """
 
