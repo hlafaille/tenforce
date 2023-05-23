@@ -1,4 +1,4 @@
-def check(obj: object, auto_cast: bool) -> None:
+def check(obj: object, auto_cast: bool = False) -> None:
     """
     Checks the class variables of an object & enforces its type hints
     :param obj: Instance of a class

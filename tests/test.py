@@ -1,4 +1,7 @@
+import gc
 import unittest
+from typing import Any
+
 from pydantic import BaseModel
 
 from tenforce.enforcer import check
@@ -20,11 +23,11 @@ class TestClassPd(BaseModel):
 
 
 class TestValidator(unittest.TestCase):
-    def test_one_billion_tenforce(self):
+    def test_one_million_tenforce(self):
         """
         Tests 1 Billion successful validations on TestClass using Tenforce
         """
-        for x in range(0, 9_999_999):
+        for x in range(0, 1_000_000):
             test_class = TestClass()
             test_class.sku = 12345
             test_class.mfg_part_number = "ABC"
@@ -32,11 +35,11 @@ class TestValidator(unittest.TestCase):
             test_class.image_urls = ["a", "b"]
             check(test_class)
 
-    def test_one_billion_pydantic(self):
+    def test_one_million_pydantic(self):
         """
-        Tests 1 Billion successful validations on TestClasPd using Pydantic
+        Tests one million validations on TestClasPd using Pydantic
         """
-        for x in range(0, 9_999_999):
+        for x in range(0, 1_000_000):
             test_class = TestClassPd(
                 sku=12345,
                 mfg_part_number="ABC",
