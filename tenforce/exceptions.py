@@ -8,3 +8,7 @@ class TypeEnforcementError(Exception):
 
     def __str__(self):
         return f"'{self.class_name}.{self.var_name}' is type '{self.actual_type.__name__}', needs type '{self.requested_type.__name__}'. Value is: {self.obj}"
+
+
+class AutoCastError(Exception):
+    pass

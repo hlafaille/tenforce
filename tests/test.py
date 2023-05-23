@@ -32,7 +32,7 @@ class TestValidator(unittest.TestCase):
             test_class.sku = 12345
             test_class.mfg_part_number = "ABC"
             test_class.description = "Test Description"
-            test_class.image_urls = []
+            test_class.image_urls = ["a", "b"]
             check(test_class)
 
     def test_one_billion_pydantic(self):
@@ -50,9 +50,13 @@ class TestValidator(unittest.TestCase):
     def test_fail(self):
         try:
             test_class = TestClass()
-            test_class.sku = 'AAAA'
+            test_class.sku = 123
+            test_class.mfg_part_number = "ABC"
+            test_class.description = "123"
+            test_class.image_urls = [1, 2]
             check(test_class)
-        except TypeEnforcementError:
+        except TypeEnforcementError as e:
+            print(e)
             print("Caught TypeEnforcementError, pass")
 
     def test_autocast(self):
@@ -60,6 +64,6 @@ class TestValidator(unittest.TestCase):
         test_class.sku = "12345"
         test_class.mfg_part_number = "ABC"
         test_class.description = "Test Description"
-        test_class.image_urls = []
+        test_class.image_urls = ["a", "b"]
         check(test_class, auto_cast=True)
 
