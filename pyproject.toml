@@ -1,12 +1,13 @@
 [project]
 name = "tenforce"
-version = "1.0.0"
+version = "0.1.2"
 description = "Type enforcement for Python"
+readme = "README.md"
+license = {file = "LICENSE.md"}
 requires-python = ">=3.11"
-dependencies = []
 
 [build-system]
-requires = ["setuptools>=61.2", "wheel", "cython"]
+requires = ["setuptools>=61.2", "Cython==0.29.34"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
