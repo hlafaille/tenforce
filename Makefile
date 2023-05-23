@@ -13,4 +13,4 @@ clean:
 	rm -f tenforce/*.dll
 
 upload:
-	python3 -m twine --no-color -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD} --non-interactive --disable-progress-bar dist/*
+	python3 -m twine --no-color upload -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD} --non-interactive --disable-progress-bar dist/*
