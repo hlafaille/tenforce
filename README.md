@@ -5,6 +5,31 @@
 # Installation
 `pip install tenforce`
 
+# Usage
+```python
+from uuid import UUID, uuid4
+from tenforce.enforcer import check
+
+# define a class
+class CreateOrderRequest:
+    user_id: UUID
+    skus: list[int]
+    ship_service_level: str
+
+if __name__ == "__main__":
+    # populate your class that needs type enforcement
+    request = CreateOrderRequest()
+    request.user_id = uuid4()
+    request.skus = [1234567890, 0987213]
+    ship_service_level = "Overnight"
+    
+    # call check() on it
+    check(request)
+    
+    # or, automatically cast compatible types (ex: numeric strings with an int annotation)
+    check(request, auto_cast=True)
+```
+
 # Reason for development
 
 I developed this package because I had issues with Pydantic and handling large amounts of base models. I eventually
