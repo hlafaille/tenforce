@@ -53,7 +53,9 @@ class TestValidator(unittest.TestCase):
             test_class.sku = 123
             test_class.mfg_part_number = "ABC"
             test_class.description = "123"
-            test_class.image_urls = [1, 2]
+            test_class.image_urls = []
+            for x in range(0, 11111):
+                test_class.image_urls.append(x)
             check(test_class)
         except TypeEnforcementError as e:
             print(e)

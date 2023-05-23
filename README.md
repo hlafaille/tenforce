@@ -14,8 +14,8 @@ rewrite in rust with V2 though, so let's see how that turns out :)
 This package is designed to enforce the types of a Python class and its class variables (through type hints). Written
 mainly in Cython, it follows a few design principles.
 
-1. Sacrifice some dynamic language features for speed and simplicity
-    * Things like Unions (except for `None` unions & `Optional`) for the sake of simplicity and speed
+1. Sacrifice certain dynamic language features for speed and simplicity
+    * Things like Unions (except for `None` unions & `Optional`) & subscripted type annotations (ex: `list[str]`) for the sake of simplicity and speed
 2. Opt-in helpers, not opt-out
     * By default, we try to run was little code as possible when calling `check()` on an object. We do have extra arguments
       like `auto_cast` to automatically cast variables (assuming it can be a successful cast)
