@@ -48,6 +48,9 @@ class TestValidator(unittest.TestCase):
             )
 
     def test_fail(self):
+        """
+        Try to force a TypeEnforcementError
+        """
         try:
             test_class = TestClass()
             test_class.sku = 123
@@ -62,6 +65,9 @@ class TestValidator(unittest.TestCase):
             print("Caught TypeEnforcementError, pass")
 
     def test_autocast(self):
+        """
+        Test automatically casting types
+        """
         test_class = TestClass()
         test_class.sku = "12345"
         test_class.mfg_part_number = "ABC"
