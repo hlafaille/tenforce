@@ -1,0 +1,13 @@
+build==0.10.0
+certifi==2023.5.7
+charset-normalizer==3.1.0
+Cython==0.29.34
+dnspython==2.3.0
+idna==3.4
+packaging==23.1
+pydantic==1.10.7
+pymongo==4.3.3
+pyproject_hooks==1.0.0
+requests==2.30.0
+typing_extensions==4.5.0
+urllib3==2.0.2
