@@ -139,7 +139,7 @@ cpdef ParsedMember _parse_member(str class_name, str member_name, type annotatio
     return parsed_member
 
 
-cpdef check(object obj: object, bint auto_cast: bool = False):
+cpdef check(object obj, bint auto_cast = False):
     """
     Checks the class variables of an object & enforces its type hints
     :param obj: Instance of a class
