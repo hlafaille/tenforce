@@ -87,7 +87,7 @@ cpdef ParsedListMember _parse_generic_alias_member(str class_name, str member_na
     :return: ParsedListMember
     """
     # get what kind of generic alias this is
-    cpdef type origin = typing.get_origin(generic_alias)
+    cdef type origin = typing.get_origin(generic_alias)
     if origin is not list:
         raise ValueError(f"Unsupported Generic Alias origin type '{origin}'")
 
@@ -126,7 +126,7 @@ cpdef ParsedMember _parse_member(str class_name, str member_name, type annotatio
         obj = _auto_cast(obj, annotation)
 
     # create a ParsedMember
-    cpdef ParsedMember parsed_member = ParsedMember()
+    cdef ParsedMember parsed_member = ParsedMember()
     parsed_member.annotated_type = annotation
     parsed_member.actual_type = type(obj)
     parsed_member.obj = obj
