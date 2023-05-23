@@ -2,6 +2,8 @@
 
 **T**ype **enforce**ment for Python.
 
+# Installation
+
 # Reason for development
 
 I developed this package because I had issues with Pydantic and handling large amounts of base models. I eventually
