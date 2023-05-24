@@ -11,6 +11,9 @@ clean:
 	rm -f tenforce/*.c
 	rm -f tenforce/*.so
 	rm -f tenforce/*.dll
+	rm -f tenforce/lib/*.c
+	rm -f tenforce/lib/*.so
+	rm -f tenforce/lib/*.dll
 
 upload:
 	python3 -m twine --no-color upload -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD} --non-interactive --disable-progress-bar dist/*
