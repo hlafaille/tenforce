@@ -1,6 +1,6 @@
 #cython: language_level=3
 import typing
-from types import GenericAlias, UnionType
+from types import GenericAlias, UnionType, NoneType
 
 from tenforce.exceptions import TypeEnforcementError, AutoCastError
 
@@ -21,7 +21,7 @@ cdef class ParsedMember:
             raise TypeEnforcementError(
                 class_name=self.class_name,
                 var_name=self.member_name,
-                requested_type=self.annotated_type,
+                requested_types=[self.annotated_type],
                 actual_type=self.actual_type,
                 obj=self.obj
             )
@@ -48,7 +48,7 @@ cdef class ParsedListMember:
                 raise TypeEnforcementError(
                     class_name=self.class_name,
                     var_name=f"{self.member_name}[{x}]",
-                    requested_type=self.base_annotated_type,
+                    requested_types=[self.base_annotated_type],
                     actual_type=current_elem_type,
                     obj=self.list_[x]
                 )
@@ -80,7 +80,7 @@ cdef class ParsedUnionMember:
             raise TypeEnforcementError(
                 class_name=self.class_name,
                 var_name=self.member_name,
-                requested_type=str(self.allowed_types),
+                requested_types=self.allowed_types,
                 actual_type=self.actual_type,
                 obj=self.obj
             )
@@ -239,9 +239,11 @@ cpdef check(object obj, bint auto_cast = False):
     # create the ParsedMember instance and a list to hold them
     cdef list parsed_members = []
     cdef ParsedMember parsed_member
-
     cdef list parsed_generic_alias_member = []
-    cdef ParsedListMember parsed_list_member
+    cdef ParsedListMember plm
+    cdef list parsed_union_members = []
+    cdef ParsedUnionMember pum
+
 
     # iterate over the annotations and create ParsedMember objects
     cdef str member_name
@@ -254,17 +256,16 @@ cpdef check(object obj, bint auto_cast = False):
                 obj=values.get(member_name),
                 auto_cast=auto_cast
             )
+            parsed_generic_alias_member.append(plm)
         elif type(annotations[member_name]) is UnionType:
-            typing.get_args(annotations[member_name])
-            print(typing.get_args(annotations[member_name]))
-            parsed_member = _parse_union_member(
+            pum = _parse_union_member(
                 class_name=class_name,
                 member_name=member_name,
                 allowed_types=typing.get_args(annotations[member_name]),
                 obj=values.get(member_name),
                 auto_cast=auto_cast
             )
-            print()
+            parsed_union_members.append(pum)
         else:
             parsed_member = _parse_member(
                 class_name=class_name,

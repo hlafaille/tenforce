@@ -126,7 +126,7 @@ class TestEnforcer(unittest.TestCase):
         Tests an optional field
         """
         test_class = OtherOtherTestClass()
-        test_class.sku = None
+        test_class.sku = "ABC"
         test_class.mfg_part_number = "ABC"
         test_class.description = "Test Description"
         test_class.image_urls = [1, 2]
