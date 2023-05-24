@@ -18,8 +18,6 @@ cdef class ParsedMember:
 
 
 cdef class ParsedListMember:
-    # we don't have an actual_type field, since a list can have more than one type!
-
     cpdef enforce(self):
         """
         Enforces the type annotated_type for list_

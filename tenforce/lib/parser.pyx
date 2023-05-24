@@ -1,9 +1,8 @@
 import typing
 
-from tenforce.autocast cimport auto_cast_object
-from tenforce.members cimport ParsedMember, ParsedListMember, ParsedUnionMember
+from tenforce.lib.autocast import auto_cast_object
 
-cpdef ParsedListMember _parse_generic_alias_member(str class_name, str member_name, object generic_alias, object obj, bint auto_cast = False):
+cpdef ParsedListMember parse_generic_alias_member(str class_name, str member_name, object generic_alias, object obj, bint auto_cast = False):
     """
     Parses a member of a class that has a GenericAlias type annotation (ex: list[str])
     :param class_name: 
@@ -39,7 +38,7 @@ cpdef ParsedListMember _parse_generic_alias_member(str class_name, str member_na
     return plm
 
 
-cpdef ParsedUnionMember _parse_union_member(str class_name, str member_name, tuple allowed_types, object obj, bint auto_cast = False):
+cpdef ParsedUnionMember parse_union_member(str class_name, str member_name, tuple allowed_types, object obj, bint auto_cast = False):
     """
     Parses a union member of a class
     :param class_name: Class name
@@ -66,7 +65,7 @@ cpdef ParsedUnionMember _parse_union_member(str class_name, str member_name, tup
     return parsed_member
 
 
-cpdef ParsedMember _parse_member(str class_name, str member_name, type annotation, object obj, bint auto_cast = False):
+cpdef ParsedMember parse_member(str class_name, str member_name, type annotation, object obj, bint auto_cast = False):
     """
     Parses a standard member of a class
     :param class_name: Class name
