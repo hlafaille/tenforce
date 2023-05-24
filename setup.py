@@ -3,8 +3,7 @@ from Cython.Build import cythonize
 
 setup(
     name='tenforce',
-    ext_modules=cythonize(
-        ["tenforce/enforcer.pyx", "tenforce/autocast.pyx", "tenforce/members.pyx", "tenforce/parser.pyx"]),
+    ext_modules=cythonize(["tenforce/enforcer.pyx", "tenforce/members.pxd", "tenforce/parser.pxd", "tenforce/autocast.pxd"]),
     package_data={
         "tenforce": ["py.typed", "enforcer.pyi"]
     }
