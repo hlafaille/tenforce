@@ -1,6 +1,6 @@
 #cython: language_level=3
 import typing
-from types import GenericAlias
+from types import GenericAlias, UnionType
 
 from tenforce.exceptions import TypeEnforcementError, AutoCastError
 
@@ -17,7 +17,6 @@ cdef class ParsedMember:
         :raises TypeEnforcementError: if there is a mismatched type
         :return: None
         """
-        #print(f"{self.class_name}.{self.member_name}: {self.annotated_type} | {self.actual_type} = {self.obj}")
         if self.actual_type is not self.annotated_type:
             raise TypeEnforcementError(
                 class_name=self.class_name,
@@ -54,6 +53,39 @@ cdef class ParsedListMember:
                     obj=self.list_[x]
                 )
 
+
+cdef class ParsedUnionMember:
+    cdef tuple allowed_types
+    cdef type actual_type
+    cdef object obj
+    cdef str member_name
+    cdef str class_name
+
+    cpdef enforce(self):
+        """
+        Enforces the type for this ParsedMember
+        :raises TypeEnforcementError: if there is a mismatched type
+        :return: None
+        """
+        # try to find a matching type in the union
+        cdef int x
+        cdef bint match_found = False
+        for x in range(len(self.allowed_types)):
+            if self.actual_type is self.allowed_types[x]:
+                match_found = True
+                break
+
+        # if there was no matching type found in the union, raise error
+        if not match_found:
+            raise TypeEnforcementError(
+                class_name=self.class_name,
+                var_name=self.member_name,
+                requested_type=str(self.allowed_types),
+                actual_type=self.actual_type,
+                obj=self.obj
+            )
+
+
 cpdef object _auto_cast(object obj, type annotation):
     """
     Cast an object to its annotated type
@@ -75,6 +107,31 @@ cpdef object _auto_cast(object obj, type annotation):
         raise AutoCastError(f"{obj} failed to cast to {annotation}")
 
     return obj
+
+
+cpdef object _auto_cast_union(object obj, type annotation):
+    """
+    Cast an object to its annotated type
+    :param obj: Object to cast
+    :param annotation: Type annotation
+    :raise AutoCastError: if it was impossible to cast obj to its type annotation
+    :return: Casted object
+    """
+    # if the value provided is a numeric string, try and cast it to an int
+    if type(obj) is str and annotation is int and obj.isnumeric():
+        obj = int(obj)
+
+    # if the value provided is an int and the annotation requires a float, try and cast it to a float
+    if type(obj) is int and annotation is float:
+        obj = float(obj)
+
+    # if we couldn't cast obj
+    if type(obj) is not annotation:
+        raise AutoCastError(f"{obj} failed to cast to {annotation}")
+
+    return obj
+
+
 
 cpdef ParsedListMember _parse_generic_alias_member(str class_name, str member_name, object generic_alias, object obj, bint auto_cast = False):
     """
@@ -110,6 +167,34 @@ cpdef ParsedListMember _parse_generic_alias_member(str class_name, str member_na
     # run the enforce now, we want to not bother enforcing more if we have a validation error
     plm.enforce()
     return plm
+
+
+cpdef ParsedUnionMember _parse_union_member(str class_name, str member_name, tuple allowed_types, object obj, bint auto_cast = False):
+    """
+    Parses a union member of a class
+    :param class_name: Class name
+    :param member_name: Member name
+    :param obj: Object to parse
+    :param allowed_types: Tuple of allowed types in the union
+    :param auto_cast: Automatically cast compatible types
+    :return: ParsedMember object
+    """
+    # if auto cast is true, auto cast the value
+    #if auto_cast is True:
+    #    obj = _auto_cast(obj, )
+
+    # create a ParsedMember
+    cdef ParsedUnionMember parsed_member = ParsedUnionMember()
+    parsed_member.allowed_types = allowed_types
+    parsed_member.actual_type = type(obj)
+    parsed_member.obj = obj
+    parsed_member.member_name = member_name
+    parsed_member.class_name = class_name
+
+    # run the enforce now, we want to not bother enforcing more if we have a validation error
+    parsed_member.enforce()
+    return parsed_member
+
 
 cpdef ParsedMember _parse_member(str class_name, str member_name, type annotation, object obj, bint auto_cast = False):
     """
@@ -169,6 +254,17 @@ cpdef check(object obj, bint auto_cast = False):
                 obj=values.get(member_name),
                 auto_cast=auto_cast
             )
+        elif type(annotations[member_name]) is UnionType:
+            typing.get_args(annotations[member_name])
+            print(typing.get_args(annotations[member_name]))
+            parsed_member = _parse_union_member(
+                class_name=class_name,
+                member_name=member_name,
+                allowed_types=typing.get_args(annotations[member_name]),
+                obj=values.get(member_name),
+                auto_cast=auto_cast
+            )
+            print()
         else:
             parsed_member = _parse_member(
                 class_name=class_name,
