@@ -1,1 +1,2 @@
-include tenforce/enforcer.pyx
+include tenforce/*.pyx
+include tenforce/lib/*.pyx
