@@ -1,12 +1,6 @@
 from tenforce.exceptions import TypeEnforcementError
 
 cdef class ParsedMember:
-    cdef type annotated_type
-    cdef type actual_type
-    cdef object obj
-    cdef str member_name
-    cdef str class_name
-
     cpdef enforce(self):
         """
         Enforces the type for this ParsedMember
@@ -24,10 +18,6 @@ cdef class ParsedMember:
 
 
 cdef class ParsedListMember:
-    cdef type base_annotated_type
-    cdef list list_
-    cdef str member_name
-    cdef str class_name
     # we don't have an actual_type field, since a list can have more than one type!
 
     cpdef enforce(self):
@@ -51,12 +41,6 @@ cdef class ParsedListMember:
 
 
 cdef class ParsedUnionMember:
-    cdef tuple allowed_types
-    cdef type actual_type
-    cdef object obj
-    cdef str member_name
-    cdef str class_name
-
     cpdef enforce(self):
         """
         Enforces the type for this ParsedMember

@@ -1,6 +1,6 @@
 from tenforce.exceptions import AutoCastError
 
-cpdef object auto_cast(object obj, type annotation):
+cpdef object auto_cast_object(object obj, type annotation):
     """
     Cast an object to its annotated type
     :param obj: Object to cast

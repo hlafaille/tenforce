@@ -2,9 +2,8 @@
 import typing
 from types import GenericAlias, UnionType
 
+from tenforce.members cimport ParsedMember, ParsedListMember, ParsedUnionMember
 from tenforce.parser import _parse_generic_alias_member, _parse_union_member, _parse_member
-from tenforce.members import ParsedMember, ParsedListMember, ParsedUnionMember
-
 
 cpdef check(object obj, bint auto_cast = False):
     """

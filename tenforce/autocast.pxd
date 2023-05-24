@@ -1,0 +1,1 @@
+cpdef object auto_cast_object(object obj, type annotation)

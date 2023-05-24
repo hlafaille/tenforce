@@ -1,6 +1,7 @@
 import typing
 
-from tenforce.enforcer import ParsedListMember
+from tenforce.autocast cimport auto_cast_object
+from tenforce.members cimport ParsedMember, ParsedListMember, ParsedUnionMember
 
 cpdef ParsedListMember _parse_generic_alias_member(str class_name, str member_name, object generic_alias, object obj, bint auto_cast = False):
     """
@@ -24,7 +25,7 @@ cpdef ParsedListMember _parse_generic_alias_member(str class_name, str member_na
     cdef int x
     if auto_cast is True:
         for x in range(len(obj)):
-            obj[x] = _auto_cast(obj[x], annotation)
+            obj[x] = auto_cast_object(obj[x], annotation)
 
     # create a parsed list member
     cdef ParsedListMember plm = ParsedListMember()
@@ -46,7 +47,7 @@ cpdef ParsedUnionMember _parse_union_member(str class_name, str member_name, tup
     :param obj: Object to parse
     :param allowed_types: Tuple of allowed types in the union
     :param auto_cast: Automatically cast compatible types
-    :return: ParsedMember object
+    :return: ParsedUnionMember object
     """
     # if auto cast is true, auto cast the value
     #if auto_cast is True:
@@ -77,7 +78,7 @@ cpdef ParsedMember _parse_member(str class_name, str member_name, type annotatio
     """
     # if auto cast is true, auto cast the value
     if auto_cast is True:
-        obj = _auto_cast(obj, annotation)
+        obj = auto_cast_object(obj, annotation)
 
     # create a ParsedMember
     cdef ParsedMember parsed_member = ParsedMember()
